@@ -21,3 +21,14 @@ Particles - make a demo that shows an awesome fire effect. Please keep the numbe
 Feel free to use existing libraries how you would use them in a real project.
 
 Please add a description of what are the main challenges of each task and how you solve them.
+
+Usage:
+1. Clone the repository
+2. Run `npm i --legacy-peer-deps` - !important becauserevolt particles library has still some issue with versions of other libraries
+3. Run `npm run start`
+
+Main challenges:
+1. Task 1 - Mostly handling x and y coordinates and making sure that the animation is smooth and runs well on low-end devices.
+2. Task 2 - I used pixi text here so no issues since it already supports emojis
+3. Task 3 - Pixi particles library is not supported in pixi 8, so i had to make one, so i am not really happy how it turned out, tbh, i was counting that pixi-particles or revolt fx would work, both had some forks that supposed to work but they dont :)
+

@@ -10,8 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "gsap": "^3.12.5",
-    "pixi.js": "^8.3.2",
-    "revolt-fx": "^1.3.5"
+    "pixi.js": "^8.3.2"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",
