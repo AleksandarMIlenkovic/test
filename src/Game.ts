@@ -3,7 +3,6 @@ import { TextImageTool } from "./TextImageTool";
 import { Button } from "./Button";
 import { ParticleFire } from "./ParticleFire";
 import { Cards } from "./Cards";
-import { Color } from "revolt-fx";
 
 export class Game {
     public app!: Application;
