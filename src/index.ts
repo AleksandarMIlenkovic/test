@@ -16,8 +16,9 @@ declare global {
 
 (async () => {
     const app = new Application();
-    await app.init({width: window.innerWidth, height: window.innerHeight});
     const gameElement = document.getElementById("game");
+    await app.init({width: 1280, height: 640});
+
     if (gameElement) {
         gameElement.appendChild(app.canvas);
     } else {
@@ -29,14 +30,15 @@ declare global {
 
     const game = new Game();
     await game.initialize(app);
-    game.resize(app.screen.width, app.screen.height);
+    
     window.__PIXI_APP__ = app;
-    window.addEventListener("resize", () => {
+    
+    const resize =() => {
         const {innerWidth, innerHeight} = window;
         const MAX_SIZE = 1500;
 
         // design game width and height
-        const GAME_WIDTH = 1100;
+        const GAME_WIDTH = 1280;
         const GAME_HEIGHT = 640;
     
         const clientAspectRatio = innerWidth / innerHeight;
@@ -72,14 +74,16 @@ declare global {
           rootStyle.width = px(width * scale);
           rootStyle.height = px(height * scale);
         }
-        
         app.renderer.resize(width, height);
-        game.resize(width, height);
-    });
+        game.resize();
+    };
+    window.addEventListener("resize", resize);
+    
     function clamp(value: number, min: number, max: number) {
         return Math.min(Math.max(value, min), max);
     }
     const px = (value: string | number) => `${value}px`;
+    resize();
 })();
 
 

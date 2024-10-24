@@ -50,9 +50,11 @@ export class TextImageTool extends Container {
 
     private getRandomText(): string {
        
-        const texts = ['Hello', 'World', 'PixiJS', 'Text', 'Image', 'Tool'];
+        const texts = [' Nice to see you ', ' Wow ', ' Awesome ', ' Hello, glad you made it ', 'Awesomely done ', ' Great Tool '];
         return texts[Math.floor(Math.random() * texts.length)];
     }
+
+    
 
     public destroy() {
         clearInterval(this.updateInterval);

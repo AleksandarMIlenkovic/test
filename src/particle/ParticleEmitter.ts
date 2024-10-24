@@ -53,20 +53,20 @@ export class ParticleEmitter {
     if (this.particles.length >= this.maxParticles || !this.emitting) return;
 
     // Set even stronger random initial horizontal force
-    const initialForceX = 0//0(Math.random() - 0.5) * 8; // Range: -4 to 4 (doubled again)
+    const initialForceX = 0.01//0(Math.random() - 0.5) * 8; // Range: -4 to 4 (doubled again)
     
     // Set random speed for the particle (vertical speed)
-    const speed = Math.random() * 0.4 + 0.6; // Speed range: 0.2 to 0.6 pixels/second (slightly increased)
+    const speed = Math.random() * 0.1 + 0.2; // Speed range: 0.2 to 0.6 pixels/second (slightly increased)
     
     // Initial velocity components
     const vx = initialForceX;
-    const vy = -speed*1.2; // Negative speed for initial upward movement
+    const vy = -speed; // Negative speed for initial upward movement
     
     // Set initial upward boost
     const initialBoost = 0; // Added a small initial boost
     
     // Set random lifetime for the particle
-    const lifetime = Math.random() * 50 + 50; // Lifetime range: 50 to 75 seconds (increased)
+    const lifetime = Math.random() * 30 + 50; // Lifetime range: 50 to 75 seconds (increased)
     
     // Set random rotation speed within the defined range
     const rotationSpeed = Math.random() * (this.rotationSpeedRange.max - this.rotationSpeedRange.min) + this.rotationSpeedRange.min;
@@ -89,7 +89,7 @@ export class ParticleEmitter {
 
     // Set starting position to the emission point with slight variation
     particle.x = this.position.x + (Math.random() - 0.5) * 20; // Small horizontal variation
-    particle.y = this.position.y + (Math.random() - 0.5) * 20; // Small vertical variation
+    particle.y = this.position.y + (Math.random() - 0.5) * 5; // Small vertical variation
 
     // Add the particle to the array and the container
     this.particles.push(particle);

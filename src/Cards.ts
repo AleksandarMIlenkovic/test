@@ -6,7 +6,17 @@ export class Cards extends Container {
     private app: Application;
     private cardTextures: Sprite[] = [];
     private firstDeck: Container = new Container();
+    private firstDeckText: Text = new Text({text: 'First Deck', style: new TextStyle({
+        fontFamily: 'Arial',
+        fontSize: 16,
+        fill: 0xFFFFFF,
+    })});
     private secondDeck: Container = new Container();
+    private secondDeckText: Text = new Text({text: 'Second Deck', style: new TextStyle({
+        fontFamily: 'Arial',
+        fontSize: 16,
+        fill: 0xFFFFFF,
+    })});
     private fpsTxt!: Text;
 
     constructor(app: Application) {
@@ -21,6 +31,12 @@ export class Cards extends Container {
         this.firstDeck.x = -100;
         this.secondDeck.x = 100;
         this.addChild(this.firstDeck, this.secondDeck);
+        this.secondDeck.y -= 100;  
+        this.firstDeckText.anchor.set(0.5);
+        this.secondDeckText.anchor.set(0.5);
+        this.firstDeckText.position.set(-100, 100);
+        this.secondDeckText.position.set(100, 100);
+
     }
 
     private setupFPSCounter() {
@@ -29,8 +45,9 @@ export class Cards extends Container {
             fontSize: 16,
             fill: 0xFFFFFF,
         })});
+        this.fpsTxt.anchor.set(0.5);
         this.addChild(this.fpsTxt);
-        this.fpsTxt.position.set(-this.fpsTxt.width / 2, -300);
+        this.fpsTxt.position.set(0, -350);
 
         this.ticker = new Ticker();
         this.ticker.add(() => {
@@ -47,11 +64,13 @@ export class Cards extends Container {
     }
 
     private createCardTextures() {
-        for (let i = 0; i < 52; i++) {
-            const val = i < 10 ? `0${i}` : i;
+        for (let i = 0; i < 144; i++) {
+            let cardNo = Math.floor(Math.random() * 54);
+            const val = cardNo < 10 ? `0${cardNo}` : cardNo;
             const texture = Texture.from(`tile0${val}`);
             const sprite = Sprite.from(texture);
             this.cardTextures.push(sprite);
+            
         }
     }
 
@@ -62,12 +81,15 @@ export class Cards extends Container {
             card.position.set(0, -(index * 2));
             this.firstDeck.addChild(card);
         });
+        this.addChild(this.firstDeckText, this.secondDeckText);
+        
+        this.firstDeckText.text = `First Deck (${this.firstDeck.children.length})`;
         this.startAnimation();
     }
 
     private startAnimation() {
         const totalCards = this.firstDeck.children.length;
-        
+
         this.firstDeck.children.forEach((card, index) => {
             const clonedCard = this.cloneCard(card as Sprite);
             this.addChild(clonedCard);
@@ -98,6 +120,9 @@ export class Cards extends Container {
     private onAnimationComplete(clonedCard: Sprite, originalCard: Sprite, index: number, totalCards: number) {
         this.removeChild(clonedCard);
         this.secondDeck.addChild(clonedCard);
+        this.secondDeckText.text = `Second Deck (${this.secondDeck.children.length})`;
+        this.firstDeckText.text = `First Deck (${144-this.secondDeck.children.length})`;
+
         clonedCard.position.set(0, this.calculateFinalY(index, totalCards, clonedCard) - this.secondDeck.y);
         originalCard.visible = false;
     }
@@ -115,6 +140,8 @@ export class Cards extends Container {
         clonedCard.roundPixels = originalCard.roundPixels;
         return clonedCard;
     }
+
+   
 
     public destroy() {
         this.ticker.stop();

@@ -1,4 +1,4 @@
-import { Application, Assets, Container } from "pixi.js";
+import { Application, Assets, Container, Sprite } from "pixi.js";
 import { TextImageTool } from "./TextImageTool";
 import { Button } from "./Button";
 import { ParticleFire } from "./ParticleFire";
@@ -10,7 +10,7 @@ export class Game {
     private particles!: ParticleFire;
     private cards!: Cards;
     private buttonsContainer!: Container;
-    private backButton!: Button;
+    private backButton!: Sprite;
     private currentPage!: Container;
     constructor() {
         
@@ -18,12 +18,22 @@ export class Game {
 
     async initialize(app: Application) {
         this.app = app;
-       
+        await Assets.load(["./assets/btn_bcgd.png", "./assets/back_btn_bcgd.png"]);
+        this.backButton = Sprite.from("./assets/back_btn_bcgd.png");
+        this.backButton.interactive = true;
+        this.backButton.position.set(this.backButton.width, this.backButton.height);
+        this.backButton.on("pointerdown", () => {
+            this.currentPage?.destroy(true);
+            this.showButtons();
+        });
+        this.app.stage.addChild(this.backButton);
+        this.backButton.visible = false;
         this.createButtons();
         
     }
 
     private createButtons() {
+        
         this.buttonsContainer = new Container();
         const cards_button = new Button(this.app.renderer, "CARDS", 0x0000ff);
         this.buttonsContainer.addChild(cards_button);
@@ -49,15 +59,7 @@ export class Game {
             this.showParticles();
         });
         this.app.stage.addChild(this.buttonsContainer);
-
-        this.backButton = new Button(this.app.renderer, "BACK TO MENU", 0xf7fa27);
-        this.backButton.interactive = true;
-        this.backButton.position.set(this.backButton.width, this.backButton.height);
-        this.backButton.on("pointerdown", () => {
-            this.currentPage?.destroy();
-            this.showButtons();
-        });
-        this.app.stage.addChild(this.backButton);
+        this.resize();
     }
 
     private showCards() {
@@ -66,24 +68,25 @@ export class Game {
         this.currentPage = this.cards;
         this.app.stage.addChild(this.cards);
         this.cards.position.set((this.app.screen.width - this.cards.width) / 2, (this.app.screen.height - this.cards.height) / 2);
+        this.resize();
     }
 
     private showText() {
-        console.log("TEXT");
         this.hideButtons();
         this.textImageTool = new TextImageTool(this.app);
         this.currentPage = this.textImageTool;
         this.app.stage.addChild(this.textImageTool);
         this.textImageTool.position.set((this.app.screen.width - this.textImageTool.width) / 2, (this.app.screen.height - this.textImageTool.height) / 2);
+        this.resize();
     }
 
     private showParticles() {
-        console.log("FIREWORKS");
         this.hideButtons();
         this.particles = new ParticleFire(this.app);
         this.currentPage = this.particles;
         this.app.stage.addChild(this.particles);
         this.particles.position.set((this.app.screen.width - this.particles.width) / 2, (this.app.screen.height - this.particles.height) / 2);
+        this.resize();
     }
 
     private hideButtons() {
@@ -92,6 +95,8 @@ export class Game {
                 child.visible = false;
             }
         });
+        this.backButton.visible = true;
+
     }
 
     private showButtons() {
@@ -100,20 +105,23 @@ export class Game {
                 child.visible = true;
             }
         });
+        this.backButton.visible = false;
     }
 
-    public resize(width: number, height: number) {
-        console.log("resize", width, height);
-       this.buttonsContainer.position.set((width - this.buttonsContainer.width) / 2, (height - this.buttonsContainer.height) / 2);
-       if (this.textImageTool!=undefined) {
-        this.textImageTool.position.set((width - this.textImageTool.width) / 2, (height - this.textImageTool.height) / 2);
+    public resize() {
+        const width = this.app.screen.width;
+        const height = this.app.screen.height;
+       if (this.textImageTool?.position) {
+        this.textImageTool.position.set(width/2, height/2);
        }
-       if (this.particles!=undefined    ) {
+       if (this.particles?.position) {
         this.particles.position.set((width - this.particles.width) / 2, (height - this.particles.height) / 2);
        }
-       if (this.cards!=undefined) {
-        this.cards.position.set((width - this.cards.width) / 2, (height - this.cards.height) / 2);
+       if (this.cards?.position) {
+        this.cards.position.set(width  / 2, height/2 + 150);
        }
+       this.buttonsContainer.position.set(width/2, height/2);
+       this.backButton.position.set(this.backButton.width/2, this.backButton.height/2);
     }
 
     
